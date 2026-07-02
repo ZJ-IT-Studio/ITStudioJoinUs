@@ -1,0 +1,11 @@
+.git
+.gitignore
+.tmp
+.env
+data
+web/node_modules
+web/dist
+server/webui/dist
+*.db
+*.log
+

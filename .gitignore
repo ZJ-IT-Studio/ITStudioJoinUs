@@ -1,0 +1,12 @@
+web/node_modules/
+web/dist/
+web/*.tsbuildinfo
+server/webui/dist/*
+!server/webui/dist/.gitkeep
+!server/webui/dist/index.html
+data/
+.env
+*.db
+*.db-shm
+*.db-wal
+.tmp/
