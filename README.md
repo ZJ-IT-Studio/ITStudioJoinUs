@@ -4,7 +4,7 @@
 
 ## 技术结构
 
-- `web/`：Vue 3、TypeScript、Vite、Pinia、Anime.js，以及按 Vue Bits copy-in 模式本地维护的动态文字/背景组件。
+- `web/`：Vue 3、TypeScript、Vite、Pinia、Anime.js、Reka UI 后台组件系统，以及按 Vue Bits copy-in 模式本地维护的动态文字/背景组件。
 - `server/`：Go、Chi、SQLite；提供 API、认证、邮件、私有图片和前端静态资源。
 - `/data`：运行时 SQLite、上传图片和备份目录；容器重建不会丢失。
 
