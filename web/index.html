@@ -10,7 +10,10 @@
       /* 开屏黑幕，纯 CSS，不依赖任何框架 */
       #__splash {
         position: fixed; inset: 0; z-index: 99999;
-        background: #272727; color: #fff;
+        background-color: #272727;
+        background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+        background-size: 24px 24px;
+        color: #fff;
         display: flex; align-items: center; justify-content: center;
         font-family: 'Inter', system-ui, sans-serif;
         transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
@@ -33,14 +36,14 @@
       }
 
       #__splash .bar {
-        width: 300px; height: 3px;
+        width: 300px; height: 10px;
         background: rgba(255,255,255,.12);
-        border-radius: 2px; overflow: hidden; margin: 0 auto;
+        border-radius: 5px; overflow: hidden; margin: 0 auto;
       }
       #__splash .bar-fill {
         height: 100%; width: 0%;
         background: linear-gradient(90deg, #c5e801, #fff);
-        border-radius: 2px; box-shadow: 0 0 12px #c5e801;
+        border-radius: 5px; box-shadow: 0 0 12px #c5e801;
       }
 
       #__splash .label {
