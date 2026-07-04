@@ -6,12 +6,22 @@ import SiteHeader from '../components/SiteHeader.vue'
 import DecryptedText from '../components/vue-bits/DecryptedText.vue'
 import GridScan from '../components/vue-bits/GridScan.vue'
 import Stack from '../components/vue-bits/Stack.vue'
+import InfiniteScroll from '../components/vue-bits/InfiniteScroll.vue'
 
 import { api } from '../api'
 import type { SiteContent } from '../types'
 
 const content = ref<SiteContent | null>(null)
 const splashReady = ref(!!(window as any).__splashDone)
+const achievementItems = [
+  { image: '/image/002/1.webp', title: '' },
+  { image: '/image/002/1aa6f6d94dc0694075c7c851779949d5.webp', title: '' },
+  { image: '/image/002/2.webp', title: '' },
+  { image: '/image/002/ScreenShot_2026-07-04_153221_074.webp', title: '' },
+  { image: '/image/002/微信图片_20260704151211_1899_38.webp', title: '' },
+  { image: '/image/002/微信图片_20260704151219_1905_38.webp', title: '' }
+]
+
 const stackCards = [
   { id: 1, img: '/image/IMG_20260419_182152..webp' },
   { id: 2, img: '/image/IMG_20260420_114312..webp' },
@@ -147,8 +157,38 @@ onBeforeUnmount(()=>{
         </div>
       </section>
 
+      <section id="achievements" class="achievements section-pad dark-panel">
+        <div class="section-kicker reveal"><span>002</span><span>ACHIEVEMENTS</span></div>
+        <div class="achievements-layout reveal">
+          <div class="achievements-text">
+            <h2 class="achievements-title">参赛经历与部分获奖</h2>
+            <div class="achievements-quote">
+              <p>每一份荣誉的背后，<br/>都是无数个日夜的打磨与坚持。</p>
+              <p>你也可以站在这里，<br/>从一行代码开始，写出属于自己的故事。</p>
+              <p class="achievements-tagline">下一个获奖的，就是你。</p>
+            </div>
+          </div>
+          <div class="achievements-scroll">
+            <InfiniteScroll
+              :items="achievementItems"
+              width="clamp(280px, 34vw, 440px)"
+              max-height="100%"
+              :item-min-height="220"
+              :is-tilted="true"
+              tilt-direction="left"
+              :autoplay="true"
+              :autoplay-speed="1.0"
+              :pause-on-hover="true"
+              :drag-sensitivity="10"
+              negative-margin="-1.2em"
+              border-color="#ffffff"
+            />
+          </div>
+        </div>
+      </section>
+
       <section id="directions" class="directions section-pad">
-        <div class="section-kicker reveal"><span>002</span><span>{{ content.directionsTitle }}</span></div>
+        <div class="section-kicker reveal"><span>003</span><span>{{ content.directionsTitle }}</span></div>
         <div class="direction-list">
           <article v-for="(item,index) in content.directions" :key="item.label" class="direction-card reveal">
             <div class="card-no">0{{ index+1 }}</div><div><span class="label-en">{{ item.label }}</span><h3>{{ item.title }}</h3><p>{{ item.body }}</p></div><ArrowUpRight class="card-arrow"/>
@@ -157,7 +197,7 @@ onBeforeUnmount(()=>{
       </section>
 
       <section class="values section-pad dark-panel">
-        <div class="section-kicker reveal"><span>003</span><span>HOW WE BUILD</span></div>
+        <div class="section-kicker reveal"><span>004</span><span>HOW WE BUILD</span></div>
         <div class="values-intro reveal"><h2>MAKE.<br/>SHARE.<br/><em>SHIP.</em></h2><p>不是简历上的一行字，<br/>是你亲手完成的一件事。</p></div>
         <div class="value-grid">
           <article v-for="item in content.values" :key="item.label" class="value-card reveal"><span>{{ item.label }}</span><h3>{{ item.title }}</h3><p>{{ item.body }}</p></article>
@@ -165,7 +205,7 @@ onBeforeUnmount(()=>{
       </section>
 
       <section id="process" class="process section-pad">
-        <div class="section-kicker reveal"><span>004</span><span>RECRUITMENT FLOW</span></div>
+        <div class="section-kicker reveal"><span>005</span><span>RECRUITMENT FLOW</span></div>
         <h2 class="display-heading reveal">从一次点击，<br/>到一起创造。</h2>
         <ol class="process-list">
           <li v-for="item in content.process" :key="item.label" class="reveal"><span>{{ item.label }}</span><h3>{{ item.title }}</h3><p>{{ item.body }}</p></li>
@@ -173,7 +213,7 @@ onBeforeUnmount(()=>{
       </section>
 
       <section class="faq section-pad">
-        <div class="section-kicker reveal"><span>005</span><span>BEFORE YOU ASK</span></div>
+        <div class="section-kicker reveal"><span>006</span><span>BEFORE YOU ASK</span></div>
         <details v-for="item in content.faqs" :key="item.label" class="faq-item reveal"><summary><span>{{ item.label }}</span>{{ item.title }}<b>+</b></summary><p>{{ item.body }}</p></details>
       </section>
 
