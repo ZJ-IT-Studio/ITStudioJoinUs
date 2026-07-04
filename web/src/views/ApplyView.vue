@@ -11,7 +11,7 @@ type Phase='lookup'|'login'|'verify'|'form'|'status'
 const campaigns=ref<Campaign[]>([]), selectedId=ref(0), phase=ref<Phase>('lookup'), loading=ref(false)
 const studentId=ref(''), password=ref(''), email=ref(''), code=ref(''), verificationToken=ref('')
 const fields=ref<FormField[]>([]), answers=ref<Record<string,unknown>>({}), files=ref<Record<string,File|undefined>>({})
-const detail=ref<ApplicationDetail|null>(null), error=ref(''), notice=ref(''), showPassword=ref(false), resubmitting=ref(false)
+const detail=ref<ApplicationDetail|null>(null), error=ref(''), notice=ref(''), showPassword=ref(false), resubmitting=ref(false), showWithdrawModal=ref(false)
 const selected=computed(()=>campaigns.value.find(c=>c.id===selectedId.value))
 function accepting(c?:Campaign){if(!c||c.status!=='open')return false;const now=Date.now();return(!c.startsAt||now>=new Date(c.startsAt).getTime())&&(!c.endsAt||now<=new Date(c.endsAt).getTime())}
 const isOpen=computed(()=>accepting(selected.value))
@@ -30,7 +30,7 @@ async function login(){error.value='';loading.value=true;try{await post('/studen
 async function loadForm(){fields.value=(await api<{fields:FormField[]}>(`/campaigns/${selectedId.value}/form`)).fields}
 async function loadDetail(){detail.value=await api<ApplicationDetail>('/student/application');phase.value='status';selectedId.value=detail.value.campaign.id}
 async function submit(){error.value='';loading.value=true;try{const payload={campaignId:selectedId.value,studentId:studentId.value,email:email.value,password:password.value,verificationToken:verificationToken.value,answers:answers.value};const form=new FormData();form.set('payload',JSON.stringify(payload));Object.entries(files.value).forEach(([key,file])=>{if(file)form.set(`file_${key}`,file)});await api(resubmitting.value?'/student/resubmit':'/applications',{method:'POST',body:form});resubmitting.value=false;await loadDetail()}catch(e){setError(e)}finally{loading.value=false}}
-async function withdraw(){if(!confirm('确定撤回当前报名吗？开放期内可以重新填写并提交。'))return;loading.value=true;try{await post('/student/withdraw');await loadDetail()}catch(e){setError(e)}finally{loading.value=false}}
+async function confirmWithdraw(){showWithdrawModal.value=false;loading.value=true;try{await post('/student/withdraw');await loadDetail()}catch(e){setError(e)}finally{loading.value=false}}
 async function startResubmit(){if(!detail.value)return;await loadForm();answers.value=Object.fromEntries(detail.value.answers.map(a=>[a.key,a.value]));files.value={};resubmitting.value=true;phase.value='form'}
 async function resetRequest(){error.value='';loading.value=true;try{const r=await post<{message:string}>('/password/request-reset',{campaignId:selectedId.value,studentId:studentId.value});notice.value=r.message}catch(e){setError(e)}finally{loading.value=false}}
 async function logout(){await post('/student/logout');detail.value=null;phase.value='lookup';password.value='';notice.value=''}
@@ -74,8 +74,23 @@ function back(){error.value='';notice.value='';phase.value=phase.value==='form'&
           <p class="step-no">APPLICATION / REV.{{ String(detail.application.revision).padStart(2,'0') }}</p><div class="status-hero"><div><span>当前进度</span><h2>{{ detail.application.reviewStatus?.name || '待处理' }}</h2><p>{{ detail.application.reviewStatus?.description }}</p></div><i :style="{background:detail.application.reviewStatus?.color}"/></div>
           <div class="status-meta"><div><span>学号</span><b>{{ detail.application.studentId }}</b></div><div><span>提交时间</span><b>{{ new Date(detail.application.submittedAt).toLocaleString('zh-CN') }}</b></div><div><span>系统状态</span><b>{{ detail.application.systemStatus==='submitted'?'已提交':'已撤回' }}</b></div></div>
           <div class="answer-review"><h3>提交内容</h3><dl><template v-for="a in detail.answers" :key="a.key"><dt>{{ a.label }}</dt><dd>{{ Array.isArray(a.value)?a.value.join('、'):a.value }}</dd></template><template v-for="u in detail.uploads" :key="u.id"><dt>{{ u.label }}</dt><dd><a :href="`/api/v1/student/uploads/${u.id}`" target="_blank">{{ u.name }}</a></dd></template></dl></div>
-          <div class="status-actions"><button v-if="detail.canWithdraw" class="danger-btn" :disabled="loading" @click="withdraw">撤回报名</button><button v-if="detail.canResubmit" class="primary-btn" @click="startResubmit"><RotateCcw/> 修改并重新提交</button></div>
+          <div class="status-actions"><button v-if="detail.canWithdraw" class="danger-btn" :disabled="loading" @click="showWithdrawModal=true">撤回报名</button><button v-if="detail.canResubmit" class="primary-btn" @click="startResubmit"><RotateCcw/> 修改并重新提交</button></div>
         </div>
+
+        <Teleport to="body">
+          <Transition name="modal">
+            <div v-if="showWithdrawModal" class="modal-overlay" @click.self="showWithdrawModal=false">
+              <div class="modal-dialog">
+                <h3>确认撤回</h3>
+                <p>确定撤回当前报名吗？开放期内可以重新填写并提交。</p>
+                <div class="modal-actions">
+                  <button class="modal-btn-cancel" @click="showWithdrawModal=false">取消</button>
+                  <button class="modal-btn-danger" @click="confirmWithdraw">确认撤回</button>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </Teleport>
 
         <p v-if="error" class="form-message error" role="alert">{{ error }}</p><p v-if="notice" class="form-message notice" role="status">{{ notice }}</p>
       </section>

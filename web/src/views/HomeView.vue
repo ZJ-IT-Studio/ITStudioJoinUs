@@ -7,6 +7,9 @@ import DecryptedText from '../components/vue-bits/DecryptedText.vue'
 import GridScan from '../components/vue-bits/GridScan.vue'
 import Stack from '../components/vue-bits/Stack.vue'
 import InfiniteScroll from '../components/vue-bits/InfiniteScroll.vue'
+import CircularText from '../components/vue-bits/CircularText.vue'
+import Game2048 from '../components/vue-bits/Game2048.vue'
+
 
 import { api } from '../api'
 import type { SiteContent } from '../types'
@@ -198,9 +201,16 @@ onBeforeUnmount(()=>{
 
       <section class="values section-pad dark-panel">
         <div class="section-kicker reveal"><span>004</span><span>HOW WE BUILD</span></div>
-        <div class="values-intro reveal"><h2>MAKE.<br/>SHARE.<br/><em>SHIP.</em></h2><p>不是简历上的一行字，<br/>是你亲手完成的一件事。</p></div>
-        <div class="value-grid">
-          <article v-for="item in content.values" :key="item.label" class="value-card reveal"><span>{{ item.label }}</span><h3>{{ item.title }}</h3><p>{{ item.body }}</p></article>
+        <div class="values-intro reveal"><h2>MAKE.<br/>SHARE.<br/><em>SHIP.</em></h2><div class="values-cta"><CircularText text="⭐HAVE⭐A⭐TRY" :spin-duration="12" on-hover="speedUp" /><p>不是简历上的一行字，<br/>是你亲手完成的一件事。</p></div></div>
+        <div class="values-bottom reveal">
+          <div class="values-motto">
+            <p class="values-motto-main">好玩的工具，都是自己一行一行写出来的。</p>
+            <p class="values-motto-sub">别只玩游戏 — 去写一个属于你自己的。</p>
+          </div>
+          <div class="values-game-area">
+            <Game2048 />
+            <span class="values-game-hint">⌨ 方向键 / WASD 操作</span>
+          </div>
         </div>
       </section>
 
