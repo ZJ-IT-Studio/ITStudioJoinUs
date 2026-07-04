@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<{
   revealDirection?: 'start' | 'end' | 'center'
   useOriginalCharsOnly?: boolean
   animateOn?: 'mount' | 'hover'
+  start?: boolean
   className?: string
   encryptedClassName?: string
 }>(), {
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<{
   revealDirection: 'start',
   useOriginalCharsOnly: false,
   animateOn: 'mount',
+  start: true,
 })
 
 const shown = ref(props.text)
@@ -119,9 +121,10 @@ function play() {
   }, props.speed)
 }
 
-onMounted(() => { if (props.animateOn === 'mount') play() })
+onMounted(() => { if (props.animateOn === 'mount' && props.start) play() })
 onBeforeUnmount(() => window.clearInterval(timer))
 watch(() => props.text, play)
+watch(() => props.start, (v) => { if (v && props.animateOn === 'mount') play() })
 </script>
 
 <template>

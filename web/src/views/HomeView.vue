@@ -10,6 +10,7 @@ import { api } from '../api'
 import type { SiteContent } from '../types'
 
 const content = ref<SiteContent | null>(null)
+const splashReady = ref(!!(window as any).__splashDone)
 let observer: IntersectionObserver | undefined
 let wheelLocked = false
 let wheelTimer: number | undefined
@@ -32,6 +33,13 @@ function onWheel(event: WheelEvent) {
 
 onMounted(async () => {
   content.value = (await api<{content:SiteContent}>('/content')).content
+
+  if (!splashReady.value) {
+    await new Promise<void>(resolve => {
+      window.addEventListener('splash-done', () => { splashReady.value = true; resolve() }, { once: true })
+    })
+  }
+
   document.documentElement.classList.add('page-snap')
   window.addEventListener('wheel', onWheel, { passive:false })
   if (!reducedMotion) {
@@ -62,11 +70,11 @@ onBeforeUnmount(()=>{
         <div class="hero-title-wrap">
           <p class="hero-index hero-line">/ RECRUIT<br/>2026</p>
           <h1 class="hero-title hero-line">
-                <span class="hero-word"><DecryptedText :text="content.heroTitle.split(' ')[0]" :speed="45" :max-iterations="8" :sequential="true" reveal-direction="start" /></span>
-                <span class="hero-word"><DecryptedText :text="content.heroTitle.split(' ')[1]" :speed="45" :max-iterations="8" :sequential="true" reveal-direction="start" /></span>
-                <span class="hero-word"><DecryptedText :text="content.heroTitle.split(' ')[2]" :speed="45" :max-iterations="8" :sequential="true" reveal-direction="start" /></span>
+                <span class="hero-word"><DecryptedText :text="content.heroTitle.split(' ')[0]" :speed="45" :max-iterations="8" :sequential="true" reveal-direction="start" :start="splashReady" /></span>
+                <span class="hero-word"><DecryptedText :text="content.heroTitle.split(' ')[1]" :speed="45" :max-iterations="8" :sequential="true" reveal-direction="start" :start="splashReady" /></span>
+                <span class="hero-word"><DecryptedText :text="content.heroTitle.split(' ')[2]" :speed="45" :max-iterations="8" :sequential="true" reveal-direction="start" :start="splashReady" /></span>
               </h1>
-          <p class="hero-cn hero-line"><DecryptedText :text="content.heroSubtitle" :speed="45" :max-iterations="2" :sequential="true" reveal-direction="start" /></p>
+          <p class="hero-cn hero-line"><DecryptedText :text="content.heroSubtitle" :speed="45" :max-iterations="2" :sequential="true" reveal-direction="start" :start="splashReady" /></p>
         </div>
         <div class="hero-footer hero-line">
           <a href="#about" class="scroll-cue"><ArrowDown/> SCROLL TO EXPLORE</a>

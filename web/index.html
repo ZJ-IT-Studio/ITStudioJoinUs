@@ -135,6 +135,7 @@
         if (sessionStorage.getItem(SKEY)) {
           var el = document.getElementById('__splash');
           if (el) el.remove();
+          window.__splashDone = true;
           return;
         }
 
@@ -181,6 +182,8 @@
         splash.addEventListener('transitionend', function() {
           splash.remove();
           sessionStorage.setItem(SKEY, '1');
+          window.__splashDone = true;
+          window.dispatchEvent(new CustomEvent('splash-done'));
         }, { once: true });
       })();
     </script>
