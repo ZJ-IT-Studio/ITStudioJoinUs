@@ -22,7 +22,8 @@ const achievementItems = [
   { image: '/image/002/2.webp', title: '' },
   { image: '/image/002/ScreenShot_2026-07-04_153221_074.webp', title: '' },
   { image: '/image/002/微信图片_20260704151211_1899_38.webp', title: '' },
-  { image: '/image/002/微信图片_20260704151219_1905_38.webp', title: '' }
+  { image: '/image/002/微信图片_20260704151219_1905_38.webp', title: '' },
+  { image: '/image/002/微信图片_20260705213611_167_17.webp', title: '' }
 ]
 
 const stackCards = [
