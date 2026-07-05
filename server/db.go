@@ -147,7 +147,9 @@ func seed(db *sql.DB, cfg Config) error {
 		cid, _ := res.LastInsertId()
 		fields := [][6]any{
 			{"name", "姓名", "text", 1, "怎么称呼你？", 10},
-			{"college", "学院 / 专业 / 年级", "text", 1, "例如：计算机学院 / 软件工程 / 2025级", 20},
+			{"college", "学院", "text", 1, "例如：计算机学院", 20},
+				{"major", "专业", "text", 1, "例如：软件工程", 25},
+				{"grade", "年级", "select", 1, "", 28},
 			{"direction", "意向方向", "select", 1, "", 30},
 			{"intro", "关于你", "textarea", 1, "介绍你的兴趣、经历，以及想加入 IT Studio 的理由", 40},
 			{"portfolio", "作品链接", "url", 0, "GitHub、个人网站或在线作品集", 50},
@@ -157,6 +159,9 @@ func seed(db *sql.DB, cfg Config) error {
 			opts := "[]"
 			if f[0] == "direction" {
 				opts = `["开发 / DEV","设计 / DESIGN","产品 / PRODUCT","运营 / OPS"]`
+			}
+			if f[0] == "grade" {
+				opts = `["2026级","2025级","2024级","2023级"]`
 			}
 			if f[0] == "available" {
 				opts = `["3–5 小时","5–8 小时","8 小时以上"]`

@@ -14,3 +14,4 @@ data/
 *.db-shm
 *.db-wal
 .tmp/
+temp/
